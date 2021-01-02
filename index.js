@@ -15,8 +15,9 @@ app.listen(PORT, () => {
 });
 
 //setup Mongoose
-const dbUrl =
-  'mongodb+srv://ptadmin:ptadmin123@cluster0.bkxls.mongodb.net/<dbname>?retryWrites=true&w=majority';
 mongoose
-  .connect(dbUrl, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.DB_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(console.log('mongodb connected'));

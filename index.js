@@ -20,9 +20,13 @@ mongoose.connect(
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
   },
   (err) => {
     if (err) throw err;
     console.log('mongodb connected');
   }
 );
+
+//set routes
+app.use('/users', require('./routes/userRouter'));

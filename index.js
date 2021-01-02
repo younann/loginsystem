@@ -15,9 +15,14 @@ app.listen(PORT, () => {
 });
 
 //setup Mongoose
-mongoose
-  .connect(process.env.DB_URL, {
+mongoose.connect(
+  process.env.DB_URL,
+  {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-  })
-  .then(console.log('mongodb connected'));
+  },
+  (err) => {
+    if (err) throw err;
+    console.log('mongodb connected');
+  }
+);

@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const auth = require('../middleware/auth');
 
 router.post('/register', async (req, res) => {
   try {
@@ -71,7 +72,41 @@ router.post('/login', async (req, res) => {
         email: user.email,
       },
     });
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).json({ Error: error.msg });
+  }
+});
+
+router.delete('/delete', auth, async (req, res) => {
+  try {
+    console.log(req.user._id);
+    const deletedUser = await User.findByIdAndDelete(req.user._id);
+
+    res.json(deletedUser);
+  } catch (error) {
+    res.status(500).json({ Error: error.msg });
+  }
+});
+
+// func give back ture or false to check if user login
+router.post('/tokenIsValid', async (req, res) => {
+  try {
+    const token = req.header('x-auth-token');
+    if (!token) {
+      return res.json(false);
+    }
+    const verfied = jwt.verify(token, process.env.JWT_SECRET);
+    if (!verfied) {
+      return res.json(false);
+    }
+    const user = await User.findById(verfied.id);
+    if (!user) {
+      return res.json(false);
+    }
+    return res.json(true);
+  } catch (error) {
+    res.status(500).json({ Error: error.msg });
+  }
 });
 
 module.exports = router;
